@@ -1,0 +1,450 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer Presentation
+% LaTeX Template
+% Version 1.0 (10/11/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND THEMES
+%----------------------------------------------------------------------------------------
+
+\documentclass{beamer}
+
+
+\mode<presentation> {
+
+% The Beamer class comes with a number of default slide themes
+% which change the colors and layouts of slides. Below this is a list
+% of all the themes, uncomment each in turn to see what they look like.
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes}
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+
+% As well as themes, the Beamer class has a number of color themes
+% for any slide theme. Uncomment each of these in turn to see how it
+% changes the colors of your current slide theme.
+
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{macros}
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Tutorial on Bandit]{Tutorial on Bandit} % The short title appears at the bottom of every slide, the full title is only on the title page
+
+\author{Subhojyoti Mukherjee} % Your name
+\institute[IIT Madras] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+IIT Madras \\ % Your institution for the title page
+\medskip
+%\textit{john@smith.com} % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+\nocite{*}
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+\begin{frame}
+\frametitle{Overview} % Table of contents slide, comment this block out to remove it
+\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+
+\section{Major Objections raised by AISTATS} 
+\begin{frame}
+\frametitle{Major Objections raised by AISTATS}
+
+\begin{itemize}
+\item Gap-Dependent and Gap-Independent bounds take two different sets of hyper-parameters
+\item Difference between empirical performance and theoretical guarantees. Mainly taking $\rho_a$, $\rho_s$ as constant in theoretical proof and reducing it in experiments.
+\item Why didn't you test against OCUCB (which reaches the optimal bounds) or Optimistic Gittins indices (NIPS) against your algorithm?
+\item What is the optimal choice of number of clusters $p$?
+\item What is the optimal choice of $\rho_a$, $\rho_s$ and $\psi$?
+\item The algorithm is not anytime
+\end{itemize}
+\end{frame}
+
+\section{Gap-Dependent and Gap-Independent bounds} 
+\begin{frame}
+\frametitle{Gap-Dependent and Gap-Independent bounds}
+
+\begin{itemize}
+\item In both the cases we now choose $\rho_a=\frac{1}{2}$, $\rho_s=\frac{1}{2}$ and $\psi=\frac{T}{\log K}$.
+\item We achieve a gap-dependent regret of $O\bigg(\frac{K\log \big(\frac{T\Delta^{2}}{\sqrt{\log (K)}}\big)}{\Delta}\bigg)$, better than UCB1, MOSS and UCB-Improved. Not better than OCUCB.
+\item We achieve a gap-independent regret bound of $O\bigg(\sqrt{KT\log K}\bigg)$, which is not better than MOSS, OCUCB's $O\bigg(\sqrt{KT}\bigg)$.
+\item But empirically we outperform both in different test cases for large horizon $T$ and large $K$.
+\end{itemize}
+\end{frame}
+
+\section{Choosing $\rho_a$, $\rho_s$, $p$ and $\psi$} 
+\begin{frame}
+\frametitle{Choosing $\rho_a$, $\rho_s$, $p$ and $\psi$}
+
+\begin{itemize}
+\item We achieve a gap-independent regret bound of $O\bigg(\sqrt{KT\log K}\bigg)$ with $\rho_a =\frac{1}{2}$, $\rho_s =\frac{1}{2}$, $\psi=\frac{T}{\log K}$ and $p=\left\lceil\frac{K}{\log K}\right\rceil$.
+\item We prove that for $p=\left\lceil\frac{K}{\log K}\right\rceil$, we achieve a error elimination regret bound of $O(\frac{K}{K+\log K}\sqrt{KT\log K})$ for ClusUCB(employing arm elimination and cluster elimination simultaneously) while we achieve a worse elimination regret bound for ClusUCB-AE (only arm elimination) of order $O(\sqrt{KT\log K})$. 
+\item This is corroborated in the experiments as well.
+\end{itemize}
+\end{frame}
+
+\section{Handling theoretical and empirical performance mismatch} 
+\begin{frame}
+\frametitle{Handling theoretical and empirical performance mismatch}
+
+\begin{itemize}
+\item Our approach of expecting ClusUCB will beat other algorithms is wrong, because it is a round-based algorithm which is pulling all the arms equally in each round.
+\item Simple solution is to pull in each timestep the arm that maximizes the UCB and divide each round into $|B_{m}|n_{m}$ timesteps, so that we can achieve the same theoretical guarantees as ClusUCB.
+\item This is the Efficient ClusUCB (EClusUCB) which outperforms most other algorithms. All we do is to prove in Theorem 2 that EClusUCB has a regret upper bound same as ClusUCB. Rest all corollaries will follow.
+\end{itemize}
+\end{frame}
+
+\section{Experiments}
+\begin{frame}
+\frametitle{Experiments}
+\begin{figure}[!tbp]
+    \centering
+    \begin{tabular}{c}
+    \setlength{\tabcolsep}{0.1pt}
+    \subfigure[0.25\textwidth][Experiment $1$: $20$ Bernoulli-distributed arms with $r_{i_{{i}\neq {*}}}=0.07$ and $r^{*}=0.1$.]
+    {
+    		\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		ylabel style={yshift=32pt},
+		%legend style={legendshift=32pt},
+		}
+        \begin{tikzpicture}[scale=0.5]
+      	\begin{axis}[
+		xlabel={timestep},
+		ylabel={Cumulative Regret},
+		grid=major,
+        %clip mode=individual,grid,grid style={gray!30},
+        clip=true,
+        %clip mode=individual,grid,grid style={gray!30},
+  		legend style={at={(0.5,1.5)},anchor=north, legend columns=3} ]
+      	% UCB
+		\addplot table{results/NewExpt/Expt1/UCBV01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/UCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/KLUCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/MOSS01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/DMED01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/EclUCB01_1_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/TS01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt1/OCUCB01_comp_subsampled.txt};
+		%\addplot table{results/NewExpt/Expt1/EclUCB011_comp_subsampled.txt};
+      	\legend{UCB-V,UCB1,KL-UCB,MOSS,DMED,EClusUCB,TS,OCUCB}      	
+      	\end{axis}
+      	\end{tikzpicture}
+  		\label{fig:1}
+    }
+    \end{tabular}
+    \caption{Cumulative regret for various bandit algorithms on two stochastic K-armed bandit environments. }
+    \label{fig:karmed1}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Experiments}
+    \begin{figure}[!tbp]
+    \centering
+    \begin{tabular}{c}
+    \subfigure[0.25\textwidth][Experiment $2$: $100$ Gaussian-distributed arms with $r_{i_{{i}\neq {*}:1-33}}=0.1$, $r_{i_{{i}\neq {*}:34-99}}=0.6$ and $r^{*}_{i=100}=0.9$. ]
+    {
+    		\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		}
+        \begin{tikzpicture}[scale=0.5]
+        \begin{axis}[
+		xlabel={timestep},
+		ylabel={Cumulative Regret},
+        %clip mode=individual,grid,grid style={gray!30},
+       	grid=major,
+       	clip=true,
+  		legend style={at={(0.5,1.5)},anchor=north, legend columns=3} ]
+      	% UCB
+        \addplot table{results/NewExpt/Expt2_2/UCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/clUCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/MedElim_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/MOSS01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/OCUCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/EclUCB01_comp_subsampled.txt};
+		\addplot table{results/NewExpt/Expt2_2/UCBR01_comp_subsampled.txt};
+		%\addplot table{results/NewExpt/Expt2_2/EclUCB01_p_1_comp_subsampled.txt};
+		\legend{UCB1,ClusUCB,Med-Elim,MOSS,OCUCB,EClusUCB,UCB-Imp}
+      	%\legend{UCB1,ClusUCB,Med-Elim,MOSS,EClusUCB,OCUCB,UCB-Imp,EClusUCB-AE}
+      	\end{axis}
+      	\end{tikzpicture}
+   		\label{fig:2}
+    }
+    \end{tabular}
+    \caption{Cumulative regret for various bandit algorithms on two stochastic K-armed bandit environments. }
+    \label{fig:karmed2}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experiments}
+\begin{figure}[!tbp]
+    \centering
+    \begin{tabular}{c}
+    \subfigure[0.32\textwidth][Experiment $3$: Experiment $3$: $20$ to $100$ Bernoulli-distributed arms with $r_{i_{{i}\neq {*}}}=0.05$ and $r^{*}=0.1$. ]
+    {
+    	\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		ylabel style={yshift=32pt},
+		}
+        \begin{tikzpicture}[scale=0.5]
+        \begin{axis}[
+		xlabel={timestep},
+		ylabel={Cumulative Regret},
+        %clip mode=individual,grid,grid style={gray!30},
+		grid=major,
+		clip=true,
+  		legend style={at={(0.5,1.3)},anchor=north, legend columns=3} ]
+        % UCB
+		\addplot table{results/NewExpt/Expt3_1/plotFinalMOSS20_100.txt};
+		\addplot table{results/NewExpt/Expt3_1/plotFinalEclUCB20_100.txt};
+		\addplot table{results/NewExpt/Expt3_1/plotFinalOCUCB20_100.txt};
+      	\legend{MOSS,EClusUCB,OCUCB}
+      	\end{axis}
+        \end{tikzpicture}
+        \label{fig:3}
+    }
+    \end{tabular}
+	\label{fig:furtherExpt1}
+    \caption{Cumulative regret and Error Percentage for ClusUCB variants}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Experiments}
+    \begin{figure}[!tbp]
+    \centering
+    \begin{tabular}{c}
+    \subfigure[0.32\textwidth][Experiment $4$: Cumulative regret for ClusUCB for various clusters]
+    {
+    		\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		ylabel style={yshift=32pt},
+		}
+        \begin{tikzpicture}[scale=0.35]
+      	\begin{axis}[
+		ylabel={Cumulative Regret},
+		xlabel={Clusters},
+		grid=major,
+        %clip mode=individual,grid,grid style={gray!30},
+        clip=true,
+        %clip mode=individual,grid,grid style={gray!30},
+  		legend style={at={(0.5,1.3)},anchor=north, legend columns=3} ]
+      	% UCB
+      	%\addplot table{results/NewExpt/Expt4/plotFinalEclUCB01.txt};
+		%\addplot table{results/NewExpt/Expt4/plotFinalAclUCB01.txt};
+		\addplot table{results/NewExpt/Expt4/plotFinalAclUCB012.txt};
+		\addplot table{results/NewExpt/Expt4/plotFinalEclUCB012.txt};
+      	%\legend{EClusUCBA,AClusUCBA,EClusUCB,AClusUCB} 
+      	\legend{AClusUCB,EClusUCB} 
+      	\end{axis}
+      	\end{tikzpicture}
+  		\label{fig:4}
+    }
+    \end{tabular}
+	\label{fig:furtherExpt2}
+    %\caption{Cumulative regret and Error Percentage for ClusUCB variants}
+\end{figure}
+Over various number of clusters EClusUCB is found to reach close to the lowest cumulative regret at $p=\left\lceil\frac{K}{\log K}\right\rceil$. For $p=K/2$ it reaches the lowest but it increases the elimination error. So $p=\left\lceil\frac{K}{\log K}\right\rceil$ is a balance between theoretical and empirical performance. ClusUCB-AE ($p=1$) performs the worst. So clustering has some benefits.
+\end{frame} 
+    
+\begin{frame}
+\frametitle{Experiments}
+    \begin{figure}[!tbp]
+    \centering
+    \begin{tabular}{c}
+    \subfigure[0.32\textwidth][Experiment $5$: Error Percentage of EClusUCB and CCB]
+    {
+    		\pgfplotsset{
+		tick label style={font=\Large},
+		label style={font=\Large},
+		legend style={font=\Large},
+		ylabel style={yshift=12pt},
+		}
+        \begin{tikzpicture}[scale=0.5]
+      	\begin{axis}[
+		xlabel={timestep},
+		ylabel={Error Percentage},
+		grid=major,
+        %clip mode=individual,grid,grid style={gray!30},
+        clip=true,
+        %clip mode=individual,grid,grid style={gray!30},
+  		legend style={at={(0.5,1.3)},anchor=north, legend columns=3} ]
+      	% UCB
+      	\addplot table{results/NewExpt/Expt5/CCB01_comp_subsampled.txt};
+      	\addplot table{results/NewExpt/Expt5/EclUCB011_comp_subsampled.txt};
+      	\legend{CCB,EClusUCB} 
+      	\end{axis}
+      	\end{tikzpicture}
+  		\label{fig:5}
+    }
+	\end{tabular}
+	\label{fig:furtherExpt3}
+    \caption{Cumulative regret and Error Percentage for ClusUCB variants}
+\end{figure}
+\end{frame}
+
+\section{EClusUCB}
+
+\begin{frame}
+\frametitle{Logic behind EClusUCB}
+\begin{itemize}
+\item At every timestep pull the arm that has the maximum UCB.
+\item Check arm and cluster elimination conditions at every timestep.
+\item Divide each round into $|B_{m}|n_{m}$ tiesteps where $n_{m}=\bigg\lceil\frac{2\log{(\psi T\epsilon_{m}^{2})}}{\epsilon_{m}}\bigg\rceil$.
+\item The algorithm is not anytime, but it is not as bad as ClusUCB or UCB-Improved. You can stop the algorithm in between a round as you are not pulling all the arms equal number of times in a round (from  \citet{liu2016modification}) .
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}[allowframebreaks]
+\frametitle{EClusUCB Algorithm}
+
+\begin{algorithmic}
+\State {\bf Input:} Number of clusters $p$, time horizon $T$, exploration parameters $\rho_a$, $\rho_s$ and $\psi$.
+\State {\bf Initialization:} Set $m:=0$, $B_{0}:=A$, $S_0 = S$, $\epsilon_{0}:=1$, $M=\big \lfloor \frac{1}{2}\log_{2} \frac{14T}{K}\big\rfloor$, $n_{0}=\bigg\lceil\frac{2\log{(\psi T\epsilon_{0}^{2})}}{\epsilon_{0}}\bigg\rceil$ and  $N_{0}=Kn_{0}$.
+\State Create a partition $S_0$ of the arms at random into $p$ clusters of size up to $\ell=\bigg\lceil \frac{K}{p} \bigg\rceil$ each.
+\State Pull each arm once
+\For{$t=K+1,..,T$}	
+\State Pull arm $i\in B_m$ such that arg$\max_{j\in B_{m}}\bigg\lbrace \hat{r}_{j} + \sqrt{\frac{\rho_{s}\log{(\psi T\epsilon_{m}^{2})}}{2 z_{j}}} \bigg\rbrace$, where $z_j$ is the number of times arm $j$ has been pulled
+\State $t:=t+1$
+\ArmElim
+\State For each cluster $s_k \in S_{m}$, delete arm ${i}\in s_{k}$ from $B_{m}$ if
+\begin{align*}
+\hat{r}_{i} + \sqrt{\frac{\rho_{a}\log{(\psi T\epsilon_{m}^{2})}}{2 z_{i}}}  < \max_{{j}\in s_{k}}\bigg\lbrace\hat{r}_{j} -\sqrt{\frac{\rho_{a}\log{(\psi T\epsilon_{m}^{2})}}{2 z_{j}}} \bigg\rbrace
+\end{align*}
+% where $\rho_{a}=\frac{1}{w_{m}}$ and remove all such arms from $B_{m}$.
+\EndArmElim
+\ClusElim
+\State Delete cluster $s_{k}\in S_{m}$ and remove all arms $i\in s_{k}$ from $B_{m}$ if 
+\begin{align*}
+ \max_{{i}\in s_{k}}\bigg\lbrace\hat{r}_{i} + \sqrt{\frac{\rho_{s}\log{(\psi T\epsilon_{m}^{2})}}{2 z_{i}}}\bigg\rbrace 
+ < \max_{{j}\in B_{m}} \bigg\lbrace\hat{r}_{j} - \sqrt{\frac{\rho_{s} \log{(\psi T\epsilon_{m}^{2})}}{2 z_{j}}}\bigg\rbrace.
+\end{align*}
+%  and remove all such arms in the cluster $s_{k}$ from $B_{m}$ to obtain $B_{m+1}$.
+\EndClusElim
+
+\If{$t\geq N_{m}$ and $m\leq M$}
+%\ResParam
+\State $\epsilon_{m+1}:=\frac{\epsilon_{m}}{2}$\vspace{0.5ex}
+\State $B_{m+1}:=B_{m}$
+\State $n_{m+1}:=\bigg\lceil\frac{2\log{(\psi T\epsilon_{m+1}^{2})}}{\epsilon_{m+1}}\bigg\rceil$
+\State $N_{m+1}:=t+|B_{m+1}| n_{m+1}$
+\State $m:=m+1$
+%\EndResParam
+\State Stop if $|B_{m}|=1$ and pull ${i}\in B_{m}$ till $T$ is reached.
+\EndIf
+\EndFor
+\end{algorithmic}
+
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Regret bound of EClusUCB}
+\begin{itemize}
+\item We have already proved the regret bound of ClusUCB. We just have to show EClusUCB has the same regret upper bound.
+\item The approach is similar. $z_i$ is the number of times as an arm $i$ is pulled. $m_i$ is the minimum round arm $i$ gets eliminated. 
+\item $n_{m}$ is the number of pulls allocated for each surviving arms in $B_m$. 
+\item Case:1 When $z_i = n_{m_i}$ for any sub-optimal arm or cluster arm, we prove that the probability of an arm \emph{not getting eliminated} is exponentially low (as like Theorem 1).
+\item Case:2 Or $z_i < n_{m_i}$ we upper bound the number of pulls by $n_{m_{i}}$ (as like Theorem 1).
+\item Case:3 Or the sub-optimal arm or cluster arm eliminates the optimal arm which is the opposite case of Case 1. We proceed as like Theorem 1.
+\item Combining all we get that EClusUCB has an regret upper bound as like ClusUCB. 
+\item This is also intuitively clear because in any scenario ClusUCB (being round-based) will always pull sub-optimal arms more than EClusUCB.
+\end{itemize}
+\end{frame}
+
+
+
+\section{References}
+\begin{frame}[allowframebreaks]
+\frametitle{References}
+\bibliographystyle{plainnat} 
+\bibliography{biblio}
+\end{frame}
+
+
+%------------------------------------------------
+
+\begin{frame}
+\Huge{\centerline{Thank You}}
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+
+\end{document} 
